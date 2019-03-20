@@ -2,11 +2,16 @@ function Game(container) {
   this.container = container || document.body
   this.boardEl = null
 
-  this.gameBoard = [
-    [0, 1],
+  this.playerPosition = {
+    x: 0,
+    y: 1,
+  }
+  this.initialGameBoard = [
+    [1, 1],
     [1, 1],
   ]
-  
+  this.gameBoard = null
+
   this.init()
 }
 
@@ -15,8 +20,16 @@ Game.prototype.init = function () {
   this.render()
 }
 
+Game.prototype.prepareBoard = function () {
+  this.gameBoard = JSON.parse(JSON.stringify(this.initialGameBoard))
+
+  this.gameBoard[this.playerPosition.y][this.playerPosition.x] = 0
+}
+
 Game.prototype.render = function () {
   this.boardEl.innerHTML = ''
+
+  this.prepareBoard()
 
   this.gameBoard.forEach(
     row => row.forEach(
@@ -45,4 +58,16 @@ Game.prototype.makeGameBoard = function () {
   this.boardEl.style.backgroundColor = 'red'
 
   this.container.appendChild(this.boardEl)
+}
+
+Game.prototype.moveRight = function () {
+  if (this.playerPosition.x + 1 >= this.initialGameBoard[0].length)
+    return
+
+  this.playerPosition = {
+    x: this.playerPosition.x + 1,
+    y: this.playerPosition.y,
+  }
+
+  this.render()
 }
